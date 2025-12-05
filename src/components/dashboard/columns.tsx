@@ -15,7 +15,7 @@ export const columns: ColumnDef<Requirement>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'Classification',
+    header: 'Type',
     cell: ({ row }) => {
       const type = row.getValue('type') as string;
       return <div className="capitalize">{type}</div>;

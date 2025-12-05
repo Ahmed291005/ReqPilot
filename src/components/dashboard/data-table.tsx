@@ -49,7 +49,7 @@ export function DataTable<TData extends Requirement, TValue>({
 
     // Requirements Table
     (doc as any).autoTable({
-        head: [['Requirement', 'Classification', 'Priority']],
+        head: [['Requirement', 'Type', 'Priority']],
         body: table.getRowModel().rows.map(row => [
             row.original.description,
             row.original.type,
