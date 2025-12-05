@@ -47,10 +47,6 @@ export function DataTable<TData extends Requirement, TValue>({
     let finalY = 0;
     const pageMargin = 14;
 
-    // Report Title
-    doc.setFontSize(22);
-    doc.text('Requirement Report', pageMargin, 20);
-
     // Requirements Table
     (doc as any).autoTable({
         head: [['Requirement', 'Classification', 'Priority']],
@@ -59,15 +55,11 @@ export function DataTable<TData extends Requirement, TValue>({
             row.original.type,
             row.original.priority,
         ]),
-        startY: 30,
+        startY: 20,
         headStyles: {
             fillColor: [45, 52, 129]
         },
-        didDrawPage: function (data: any) {
-          doc.setFontSize(18);
-          doc.text('Requirement Repository', pageMargin, data.settings.margin.top);
-        },
-        margin: { top: 30 }
+        margin: { top: 20 }
     });
 
     finalY = (doc as any).lastAutoTable.finalY || 0;
