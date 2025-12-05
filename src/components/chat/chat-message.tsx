@@ -1,12 +1,10 @@
 import type { Message, UserStory, Stakeholder } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 import { ChatAvatar } from './chat-avatar';
 import { Skeleton } from '../ui/skeleton';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '../ui/card';
@@ -108,25 +106,6 @@ function StakeholderCard({ stakeholder }: { stakeholder: Stakeholder }) {
   );
 }
 
-
-function Timestamp({ date }: { date: Date }) {
-  const [isMounted, setIsMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
-  return (
-    <span className="text-xs text-muted-foreground">
-      {format(date, 'h:mm a')}
-    </span>
-  );
-}
-
 export function ChatMessage({ message, isLoading }: ChatMessageProps) {
   if (isLoading) {
     return (
@@ -199,7 +178,6 @@ export function ChatMessage({ message, isLoading }: ChatMessageProps) {
             </div>
           )}
         </div>
-        <Timestamp date={message.createdAt} />
       </div>
     </div>
   );
