@@ -11,18 +11,14 @@ export function ChatAvatar({ role }: ChatAvatarProps) {
   if (role === 'user') {
     return (
       <Avatar className="h-8 w-8">
-        <AvatarFallback className="bg-secondary text-secondary-foreground">
-          U
-        </AvatarFallback>
+        <AvatarFallback className="bg-secondary text-secondary-foreground"></AvatarFallback>
       </Avatar>
     );
   }
 
   return (
     <Avatar className="h-8 w-8 bg-primary text-primary-foreground">
-      <AvatarFallback className="bg-primary text-primary-foreground">
-        B
-      </AvatarFallback>
+      <AvatarFallback className="bg-primary text-primary-foreground"></AvatarFallback>
     </Avatar>
   );
 }
