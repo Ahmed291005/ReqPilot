@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
+import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppContext } from '@/context/app-state-provider';
 import { useRouter } from 'next/navigation';
@@ -29,6 +30,7 @@ export function ChatView() {
   const { 
     requirements, 
     setRequirements,
+    classifiedRequirements,
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
@@ -112,7 +114,7 @@ export function ChatView() {
     }
     setIsLoading(true);
     try {
-      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements);
+      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements, classifiedRequirements);
       
       const requirementMap = new Map(
         classifiedResult.map(cr => [cr.requirement, cr.type])
@@ -154,51 +156,43 @@ export function ChatView() {
 
 
   return (
-    <div className="flex flex-1 overflow-hidden">
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <ScrollArea className="flex-1" viewportRef={viewportRef}>
-          <div className="container mx-auto max-w-3xl space-y-6 p-4">
-            {messages.map(message => (
-              <ChatMessage key={message.id} message={message} />
-            ))}
-            {isLoading && (
-              <ChatMessage
-                message={{
-                  id: 'loading',
-                  role: 'assistant',
-                  content: '',
-                  createdAt: new Date(),
-                }}
-                isLoading
-              />
-            )}
-          </div>
-        </ScrollArea>
-        <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
-          <div className="container mx-auto flex max-w-3xl flex-col gap-2">
-            <Button
-              variant="outline"
-              onClick={handleGenerateReport}
-              disabled={isLoading || requirements.length === 0}
-              className="w-full shrink-0"
-            >
-              Extract Requirement
-            </Button>
-            <div className="flex w-full items-start space-x-2">
-              <ChatInput
-                onSendMessage={handleSendMessage}
-                isLoading={isLoading}
-              />
-            </div>
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <ScrollArea className="flex-1" viewportRef={viewportRef}>
+        <div className="container mx-auto max-w-3xl space-y-6 p-4">
+          {messages.map(message => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          {isLoading && (
+            <ChatMessage
+              message={{
+                id: 'loading',
+                role: 'assistant',
+                content: '',
+                createdAt: new Date(),
+              }}
+              isLoading
+            />
+          )}
+        </div>
+      </ScrollArea>
+      <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
+        <div className="container mx-auto flex max-w-3xl flex-col gap-2">
+          <Button
+            variant="outline"
+            onClick={handleGenerateReport}
+            disabled={isLoading || requirements.length === 0}
+            className="w-full shrink-0"
+          >
+            Extract Requirement
+          </Button>
+          <div className="flex w-full items-start space-x-2">
+            <ChatInput
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+            />
           </div>
         </div>
-      </main>
-      <aside className={cn(
-          'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
-          'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
-        )}>
-      </aside>
+      </div>
     </div>
   );
 }
