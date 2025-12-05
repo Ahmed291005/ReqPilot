@@ -5,14 +5,14 @@ import {
   continueConversation,
   generateReport,
 } from '@/app/actions';
-import type { Message, Requirement } from '@/lib/types';
+import type { Message } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
 import { useToast } from '@/hooks/use-toast';
 import { useAppContext } from '@/context/app-state-provider';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 const initialMessages: Message[] = [
   {
@@ -29,10 +29,10 @@ export function ChatView() {
   const { 
     requirements, 
     setRequirements,
+    classifiedRequirements,
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
-    isSidebarOpen,
    } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -101,9 +101,70 @@ export function ChatView() {
     }
   };
 
+  const handleGenerateReport = async () => {
+    if (requirements.length === 0) {
+      toast({
+        title: 'No requirements to analyze',
+        description:
+          'Please describe your app idea first to generate some requirements.',
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements, classifiedRequirements);
+      
+      const requirementMap = new Map(
+        classifiedResult.map(cr => [cr.requirement, cr.type])
+      );
+
+      const typeOrder: Record<string, number> = {
+        functional: 1,
+        'non-functional': 2,
+        domain: 3,
+        inverse: 4,
+      };
+      
+      const updatedReqs = requirements
+        .map(req => ({
+          ...req,
+          type: requirementMap.get(req.description) || req.type,
+        }))
+        .sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
+
+      setRequirements(updatedReqs);
+      setClassifiedRequirements(classifiedResult);
+      setUserStories(userStories);
+      setStakeholders(stakeholders);
+      
+      router.push('/dashboard');
+
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred.';
+      toast({
+        variant: 'destructive',
+        title: 'Failed to Extract Requirements',
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <main className="flex-1 flex flex-col overflow-hidden">
+        <div className="container mx-auto max-w-3xl pt-4">
+          <Button
+            variant="outline"
+            onClick={handleGenerateReport}
+            disabled={isLoading || requirements.length === 0}
+            className="w-full shrink-0"
+          >
+            Extract Requirement
+          </Button>
+        </div>
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
           <div className="container mx-auto max-w-3xl space-y-6 p-4">
             {messages.map(message => (

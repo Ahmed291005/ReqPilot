@@ -7,82 +7,14 @@ import {
   PanelRight,
 } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import { useAppContext } from '@/context/app-state-provider';
-import { generateReport } from '@/app/actions';
-import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
 
 export function Header() {
   const pathname = usePathname();
-  const router = useRouter();
-  const {
-    isSidebarOpen,
-    setIsSidebarOpen,
-    requirements,
-    classifiedRequirements,
-    setRequirements,
-    setClassifiedRequirements,
-    setUserStories,
-    setStakeholders,
-  } = useAppContext();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleGenerateReport = async () => {
-    if (requirements.length === 0) {
-      toast({
-        title: 'No requirements to analyze',
-        description:
-          'Please describe your app idea first to generate some requirements.',
-      });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const { classifiedResult, userStories, stakeholders } =
-        await generateReport(requirements, classifiedRequirements);
-
-      const requirementMap = new Map(
-        classifiedResult.map(cr => [cr.requirement, cr.type])
-      );
-
-      const typeOrder: Record<string, number> = {
-        functional: 1,
-        'non-functional': 2,
-        domain: 3,
-        inverse: 4,
-      };
-
-      const updatedReqs = requirements
-        .map(req => ({
-          ...req,
-          type: requirementMap.get(req.description) || req.type,
-        }))
-        .sort(
-          (a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99)
-        );
-
-      setRequirements(updatedReqs);
-      setClassifiedRequirements(classifiedResult);
-      setUserStories(userStories);
-      setStakeholders(stakeholders);
-      
-      router.push('/dashboard');
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred.';
-      toast({
-        variant: 'destructive',
-        title: 'Failed to Extract Requirements',
-        description: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { isSidebarOpen, setIsSidebarOpen } = useAppContext();
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm z-20 relative">
@@ -90,7 +22,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <ClipboardList className="h-6 w-6 text-primary" />
           <h1 className="text-lg font-semibold tracking-tight font-headline">
-            ReqArchitect
+            ReqPilot
           </h1>
         </Link>
         <nav className="hidden md:flex items-center gap-2">
@@ -109,14 +41,6 @@ export function Header() {
         </nav>
       </div>
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          onClick={handleGenerateReport}
-          disabled={isLoading || requirements.length === 0}
-          className="shrink-0 hidden md:flex"
-        >
-          Extract Requirement
-        </Button>
         <ThemeToggle />
         {pathname === '/' && (
           <Button
