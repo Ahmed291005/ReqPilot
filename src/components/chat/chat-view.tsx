@@ -28,7 +28,7 @@ const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
-    content: "Hello! I'm ReqPilot, to start, please describe your application idea.",
+    content: "Hello! I'm ReqPilot. Tell me about your app idea to get started.",
     createdAt: new Date(),
   },
 ];
@@ -60,11 +60,9 @@ function RequirementsDisplay({
                   <p className="text-sm font-medium">{req.description}</p>
                   <p className="text-xs text-muted-foreground">{req.type}</p>
                 </div>
-                <Badge
-                  variant='secondary'
-                >
+                <div className="ml-4 capitalize">
                   {req.priority}
-                </Badge>
+                </div>
               </li>
             ))}
           </ul>
@@ -258,7 +256,6 @@ export function ChatView() {
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
           'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
         )}>
-         <RequirementsDisplay requirements={requirements} />
       </aside>
     </div>
   );
