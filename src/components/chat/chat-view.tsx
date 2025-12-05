@@ -192,12 +192,6 @@ export function ChatView() {
         </ScrollArea>
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
           <div className="container mx-auto flex max-w-3xl flex-col gap-2">
-            <div className="flex w-full items-start space-x-2">
-              <ChatInput
-                onSendMessage={handleSendMessage}
-                isLoading={isLoading}
-              />
-            </div>
             <Button
               variant="outline"
               onClick={handleGenerateReport}
@@ -205,8 +199,14 @@ export function ChatView() {
               className="w-full shrink-0"
             >
               <FileText className="mr-2 h-4 w-4" />
-              Generate Report
+              Extract Requirements
             </Button>
+            <div className="flex w-full items-start space-x-2">
+              <ChatInput
+                onSendMessage={handleSendMessage}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
         </div>
       </main>
