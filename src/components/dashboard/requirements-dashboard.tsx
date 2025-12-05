@@ -58,10 +58,7 @@ export function RequirementsDashboard() {
     <main className="flex-1 flex-col p-4 md:p-8 overflow-y-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Requirement Repository</CardTitle>
-          <CardDescription>
-            View, manage, and export all project requirements from here.
-          </CardDescription>
+          <CardTitle>Requirements</CardTitle>
         </CardHeader>
         <CardContent>
           <DataTable columns={columns} data={requirements} />
