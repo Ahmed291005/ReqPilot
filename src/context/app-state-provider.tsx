@@ -12,9 +12,6 @@ interface AppState {
   setUserStories: React.Dispatch<React.SetStateAction<UserStory[]>>;
   stakeholders: Stakeholder[];
   setStakeholders: React.Dispatch<React.SetStateAction<Stakeholder[]>>;
-  selectedRequirement: Requirement | null;
-  setSelectedRequirement: React.Dispatch<React.SetStateAction<Requirement | null>>;
-  updateRequirement: (updatedRequirement: Requirement) => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -28,15 +25,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   >([]);
   const [userStories, setUserStories] = useState<UserStory[]>([]);
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
-  const [selectedRequirement, setSelectedRequirement] =
-    useState<Requirement | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const updateRequirement = (updatedRequirement: Requirement) => {
-    setRequirements(prev =>
-      prev.map(r => (r.id === updatedRequirement.id ? updatedRequirement : r))
-    );
-  };
 
   return (
     <AppStateContext.Provider
@@ -49,9 +38,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setUserStories,
         stakeholders,
         setStakeholders,
-        selectedRequirement,
-        setSelectedRequirement,
-        updateRequirement,
         isSidebarOpen,
         setIsSidebarOpen,
       }}

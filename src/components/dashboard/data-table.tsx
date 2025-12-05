@@ -23,11 +23,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Download, ChevronDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { useAppContext } from '@/context/app-state-provider';
-import type { Requirement } from '@/lib/types';
+import type { UserStory, Stakeholder, Requirement } from '@/lib/types';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,7 +52,6 @@ export function DataTable<TData extends Requirement, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -56,12 +62,10 @@ export function DataTable<TData extends Requirement, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
     pageCount: -1,
   });
@@ -73,11 +77,11 @@ export function DataTable<TData extends Requirement, TValue>({
 
     // Report Title
     doc.setFontSize(22);
-    doc.text('Requirements Report', pageMargin, 20);
+    doc.text('Requirement Report', pageMargin, 20);
 
     // Requirements Table
     (doc as any).autoTable({
-        head: [['Requirement', 'Type', 'Priority']],
+        head: [['Requirement', 'Classification', 'Priority']],
         body: table.getRowModel().rows.map(row => [
             row.original.description,
             row.original.type,
@@ -85,11 +89,11 @@ export function DataTable<TData extends Requirement, TValue>({
         ]),
         startY: 30,
         headStyles: {
-            fillColor: [45, 52, 129] // Corresponds to hsl(238 52% 38%)
+            fillColor: [45, 52, 129]
         },
         didDrawPage: function (data: any) {
           doc.setFontSize(18);
-          doc.text('Requirements', pageMargin, data.settings.margin.top);
+          doc.text('Requirement Repository', pageMargin, data.settings.margin.top);
         },
         margin: { top: 30 }
     });
@@ -118,7 +122,7 @@ export function DataTable<TData extends Requirement, TValue>({
         body: userStoriesBody,
         theme: 'plain',
         headStyles: {
-            fillColor: [45, 52, 129]
+          fillColor: [45, 52, 129]
         },
         didDrawPage: function (data: any) {
             doc.setFontSize(18);
@@ -138,7 +142,7 @@ export function DataTable<TData extends Requirement, TValue>({
             head: [['Role', 'Description']],
             body: stakeholdersBody,
             headStyles: {
-                fillColor: [45, 52, 129]
+              fillColor: [45, 52, 129]
             },
             didDrawPage: function (data: any) {
               doc.setFontSize(18);
@@ -153,11 +157,45 @@ export function DataTable<TData extends Requirement, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-end py-4">
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter requirements..."
+          value={
+            (table.getColumn('description')?.getFilterValue() as string) ?? ''
+          }
+          onChange={event =>
+            table.getColumn('description')?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
         <Button onClick={exportToPDF} variant="outline" className="ml-auto">
           <Download className="mr-2 h-4 w-4" />
-          Export Requirements
+          Export Report as PDF
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-2">
+              Columns <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter(column => column.getCanHide())
+              .map(column => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={value => column.toggleVisibility(!!value)}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -202,7 +240,7 @@ export function DataTable<TData extends Requirement, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Your requirements will appear here once extracted.
+                  No results.
                 </TableCell>
               </TableRow>
             )}
