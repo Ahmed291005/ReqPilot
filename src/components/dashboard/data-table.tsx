@@ -4,13 +4,8 @@ import * as React from 'react';
 
 import {
   ColumnDef,
-  SortingState,
-  ColumnFiltersState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 
@@ -39,27 +34,11 @@ export function DataTable<TData extends Requirement, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const { userStories, stakeholders } = useAppContext();
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
     pageCount: -1,
   });
 
@@ -154,7 +133,7 @@ export function DataTable<TData extends Requirement, TValue>({
         <div className="flex-1"></div>
         <Button onClick={exportToPDF} variant="outline" className="ml-auto">
           <Download className="mr-2 h-4 w-4" />
-          Export Report as PDF
+          export requirement
         </Button>
       </div>
       <div className="rounded-md border">
