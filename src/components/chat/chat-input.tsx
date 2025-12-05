@@ -71,7 +71,7 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
                 <Textarea
                   {...field}
                   ref={textareaRef}
-                  placeholder="Describe your app idea..."
+                  placeholder="Tell me about your app idea..."
                   className="max-h-36 min-h-[40px] resize-none"
                   rows={1}
                   disabled={isLoading}
