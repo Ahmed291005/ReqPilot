@@ -6,7 +6,7 @@ import { AppStateProvider } from '@/context/app-state-provider';
 import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
-  title: 'ReqPilot',
+  title: 'ReqArchitect',
   description: 'Generate software requirements with AI',
   icons: {
     icon: '/favicon.svg',
