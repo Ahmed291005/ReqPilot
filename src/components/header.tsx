@@ -27,18 +27,7 @@ export function Header() {
           </h1>
         </Link>
         <nav className="hidden md:flex items-center gap-2">
-          <Link
-            href="/"
-            className={cn(
-              'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-              pathname === '/'
-                ? 'bg-muted text-primary'
-                : 'text-muted-foreground hover:bg-muted/50'
-            )}
-          >
-            <Bot className="h-4 w-4" />
-            Chat
-          </Link>
+          
         </nav>
       </div>
       <div className="flex items-center gap-2">
