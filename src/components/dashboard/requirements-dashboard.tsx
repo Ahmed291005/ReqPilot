@@ -7,7 +7,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from '../ui/card';
 import { EditRequirementDialog } from './edit-requirement-dialog';
@@ -20,9 +19,6 @@ export function RequirementsDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Requirements</CardTitle>
-          <CardDescription>
-            View, manage, and export all project requirements from here.
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <DataTable columns={columns} data={requirements} />

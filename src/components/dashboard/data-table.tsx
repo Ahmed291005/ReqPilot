@@ -70,7 +70,7 @@ export function DataTable<TData extends Requirement, TValue>({
 
     // Report Title
     doc.setFontSize(22);
-    doc.text('Requirement Report', pageMargin, 20);
+    doc.text('Requirements Report', pageMargin, 20);
 
     // Requirements Table
     (doc as any).autoTable({
@@ -143,7 +143,7 @@ export function DataTable<TData extends Requirement, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Your requirements will appear here once extracted.
                 </TableCell>
               </TableRow>
             )}
@@ -151,10 +151,6 @@ export function DataTable<TData extends Requirement, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
       </div>
     </div>
   );
