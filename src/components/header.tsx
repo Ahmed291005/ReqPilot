@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import {
-  ClipboardList,
+  Rocket,
   LayoutDashboard,
   Bot,
   PanelRight,
@@ -21,7 +21,7 @@ export function Header() {
     <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm z-20 relative">
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-2">
-          <ClipboardList className="h-6 w-6 text-primary" />
+          <Rocket className="h-6 w-6 text-primary" />
           <h1 className="text-lg font-semibold tracking-tight font-headline">
             ReqPilot
           </h1>
