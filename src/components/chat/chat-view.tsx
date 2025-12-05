@@ -5,24 +5,85 @@ import {
   continueConversation,
   generateReport,
 } from '@/app/actions';
-import type { Message } from '@/lib/types';
+import type { Message, Requirement } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
+import { Badge } from '../ui/badge';
 import { useAppContext } from '@/context/app-state-provider';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
     content:
-      "Hello! I'm ReqPilot. To start, please tell me about your app idea.",
+      "Hello! I'm ReqPilot, your AI assistant for software requirement gathering. To start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
+
+function RequirementsDisplay({
+  requirements,
+}: {
+  requirements: Requirement[];
+}) {
+  if (requirements.length === 0) return null;
+
+  const priorityVariant = {
+    high: 'destructive',
+    medium: 'default',
+    low: 'secondary',
+  } as const;
+
+  return (
+    <>
+      <Card className="mt-4 w-full">
+        <CardHeader>
+          <CardTitle>Current Requirements</CardTitle>
+          <CardDescription>
+            Here is the list of requirements we've built so far.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {requirements.map(req => (
+              <li
+                key={req.id}
+                className="flex items-start justify-between rounded-lg border p-3"
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{req.description}</p>
+                  <p className="text-xs text-muted-foreground">{req.type}</p>
+                </div>
+                <Badge
+                  variant={
+                    priorityVariant[
+                      req.priority as keyof typeof priorityVariant
+                    ]
+                  }
+                  className="ml-4"
+                >
+                  {req.priority}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
 
 
 export function ChatView() {
@@ -33,6 +94,7 @@ export function ChatView() {
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
+    isSidebarOpen,
    } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -136,7 +198,7 @@ export function ChatView() {
       setClassifiedRequirements(classifiedResult);
       setUserStories(userStories);
       setStakeholders(stakeholders);
-      
+
       router.push('/dashboard');
 
     } catch (error) {
@@ -144,7 +206,7 @@ export function ChatView() {
         error instanceof Error ? error.message : 'An unknown error occurred.';
       toast({
         variant: 'destructive',
-        title: 'Failed to Extract Requirements',
+        title: 'Failed to Generate Report',
         description: errorMessage,
       });
     } finally {
@@ -152,19 +214,10 @@ export function ChatView() {
     }
   };
 
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <main className="flex-1 flex flex-col overflow-hidden">
-        <div className="container mx-auto max-w-3xl pt-4">
-          <Button
-            variant="outline"
-            onClick={handleGenerateReport}
-            disabled={isLoading || requirements.length === 0}
-            className="w-full shrink-0"
-          >
-            Extract Requirement
-          </Button>
-        </div>
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
           <div className="container mx-auto max-w-3xl space-y-6 p-4">
             {messages.map(message => (
@@ -185,6 +238,14 @@ export function ChatView() {
         </ScrollArea>
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
           <div className="container mx-auto flex max-w-3xl flex-col gap-2">
+            <Button
+              variant="outline"
+              onClick={handleGenerateReport}
+              disabled={isLoading || requirements.length === 0}
+              className="w-full shrink-0"
+            >
+              Extract Requirement
+            </Button>
             <div className="flex w-full items-start space-x-2">
               <ChatInput
                 onSendMessage={handleSendMessage}
@@ -194,6 +255,13 @@ export function ChatView() {
           </div>
         </div>
       </main>
+      <aside className={cn(
+          'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
+        )}>
+         <RequirementsDisplay requirements={requirements} />
+      </aside>
     </div>
   );
 }
