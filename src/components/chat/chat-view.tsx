@@ -7,15 +7,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
-import { Badge } from '../ui/badge';
+
 import { useAppContext } from '@/context/app-state-provider';
+
 import { cn } from '@/lib/utils';
 
 const initialMessages: Message[] = [
@@ -28,61 +22,8 @@ const initialMessages: Message[] = [
   },
 ];
 
-function RequirementsDisplay({
-  requirements,
-}: {
-  requirements: Requirement[];
-}) {
-  if (requirements.length === 0) return null;
-
-  const priorityVariant = {
-    high: 'destructive',
-    medium: 'default',
-    low: 'secondary',
-  } as const;
-
-  return (
-    <>
-      <Card className="mt-4 w-full">
-        <CardHeader>
-          <CardTitle>Current Requirements</CardTitle>
-          <CardDescription>
-            Here is the list of requirements we've built so far.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {requirements.map(req => (
-              <li
-                key={req.id}
-                className="flex items-start justify-between rounded-lg border p-3"
-              >
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{req.description}</p>
-                  <p className="text-xs text-muted-foreground">{req.type}</p>
-                </div>
-                <Badge
-                  variant={
-                    priorityVariant[
-                      req.priority as keyof typeof priorityVariant
-                    ]
-                  }
-                  className="ml-4"
-                >
-                  {req.priority}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    </>
-  );
-}
-
 export function ChatView() {
   const { 
-    requirements, 
     setRequirements,
     isSidebarOpen,
    } = useAppContext();
@@ -152,6 +93,7 @@ export function ChatView() {
     }
   };
 
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -189,7 +131,7 @@ export function ChatView() {
           'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
         )}
       >
-        <RequirementsDisplay requirements={requirements} />
+        {/* The requirements display was here */}
       </aside>
     </div>
   );
