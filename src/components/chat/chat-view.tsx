@@ -12,23 +12,15 @@ import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
 import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
-import { Badge } from '../ui/badge';
 import { useAppContext } from '@/context/app-state-provider';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
-    content: "Hello! I'm ReqPilot. Tell me about your app idea to get started.",
+    content:
+      "Hello! I'm ReqPilot. Tell me about your app idea to get started.",
     createdAt: new Date(),
   },
 ];
@@ -145,15 +137,7 @@ export function ChatView() {
       setClassifiedRequirements(classifiedResult);
       setUserStories(userStories);
       setStakeholders(stakeholders);
-
-      const assistantResponse: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content:
-          "I've generated a full report which includes classified requirements, user stories, and project stakeholders. You can now view this report on the Dashboard page.",
-        createdAt: new Date(),
-      };
-      setMessages(prev => [...prev, assistantResponse]);
+      
       router.push('/dashboard');
 
     } catch (error) {
@@ -171,6 +155,7 @@ export function ChatView() {
 
 
   return (
+    <div className="flex flex-1 overflow-hidden">
       <main className="flex-1 flex flex-col overflow-hidden">
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
           <div className="container mx-auto max-w-3xl space-y-6 p-4">
@@ -210,5 +195,6 @@ export function ChatView() {
           </div>
         </div>
       </main>
+    </div>
   );
 }
