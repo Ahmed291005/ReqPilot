@@ -28,8 +28,7 @@ const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
-    content:
-      "Hello! I'm ReqPilot, your AI assistant for software requirement gathering. To start, please describe your application idea.",
+    content: "Hello! I'm ReqPilot, to start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
@@ -40,12 +39,6 @@ function RequirementsDisplay({
   requirements: Requirement[];
 }) {
   if (requirements.length === 0) return null;
-
-  const priorityVariant = {
-    high: 'destructive',
-    medium: 'default',
-    low: 'secondary',
-  } as const;
 
   return (
     <>
@@ -65,7 +58,13 @@ function RequirementsDisplay({
               >
                 <div className="flex-1">
                   <p className="text-sm font-medium">{req.description}</p>
+                  <p className="text-xs text-muted-foreground">{req.type}</p>
                 </div>
+                <Badge
+                  variant='secondary'
+                >
+                  {req.priority}
+                </Badge>
               </li>
             ))}
           </ul>
@@ -214,32 +213,33 @@ export function ChatView() {
 
 
   return (
-    <main className="flex flex-1 flex-col overflow-hidden">
+    <div className="flex flex-1 overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden">
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
-        <div className="container mx-auto max-w-3xl space-y-6 p-4">
+          <div className="container mx-auto max-w-3xl space-y-6 p-4">
             {messages.map(message => (
-            <ChatMessage key={message.id} message={message} />
+              <ChatMessage key={message.id} message={message} />
             ))}
             {isLoading && (
-            <ChatMessage
+              <ChatMessage
                 message={{
-                id: 'loading',
-                role: 'assistant',
-                content: '',
-                createdAt: new Date(),
+                  id: 'loading',
+                  role: 'assistant',
+                  content: '',
+                  createdAt: new Date(),
                 }}
                 isLoading
-            />
+              />
             )}
-        </div>
+          </div>
         </ScrollArea>
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
-        <div className="container mx-auto flex max-w-3xl flex-col gap-2">
+          <div className="container mx-auto flex max-w-3xl flex-col gap-2">
             <div className="flex w-full items-start space-x-2">
-            <ChatInput
+              <ChatInput
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}
-            />
+              />
             </div>
             <Button
               variant="outline"
@@ -250,8 +250,16 @@ export function ChatView() {
               <FileText className="mr-2 h-4 w-4" />
               Generate Report
             </Button>
+          </div>
         </div>
-        </div>
-    </main>
+      </main>
+      <aside className={cn(
+          'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
+        )}>
+         <RequirementsDisplay requirements={requirements} />
+      </aside>
+    </div>
   );
 }
