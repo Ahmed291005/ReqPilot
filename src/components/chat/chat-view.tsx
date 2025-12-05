@@ -12,18 +12,69 @@ import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
 import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
+import { Badge } from '../ui/badge';
 import { useAppContext } from '@/context/app-state-provider';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
     content:
-      "Hello! I'm ReqArchitect. Tell me about your app idea to get started.",
+      "Hello! I'm ReqPilot, your AI assistant for software requirement gathering. To start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
+
+function RequirementsDisplay({
+  requirements,
+}: {
+  requirements: Requirement[];
+}) {
+  if (requirements.length === 0) return null;
+
+  const priorityVariant = {
+    high: 'destructive',
+    medium: 'default',
+    low: 'secondary',
+  } as const;
+
+  return (
+    <>
+      <Card className="mt-4 w-full">
+        <CardHeader>
+          <CardTitle>Current Requirements</CardTitle>
+          <CardDescription>
+            Here is the list of requirements we've built so far.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {requirements.map(req => (
+              <li
+                key={req.id}
+                className="flex items-start justify-between rounded-lg border p-3"
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{req.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
 
 export function ChatView() {
   const { 
@@ -33,6 +84,7 @@ export function ChatView() {
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
+    isSidebarOpen,
    } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -136,6 +188,15 @@ export function ChatView() {
       setClassifiedRequirements(classifiedResult);
       setUserStories(userStories);
       setStakeholders(stakeholders);
+
+      const assistantResponse: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content:
+          "I've generated a full report which includes classified requirements, user stories, and project stakeholders. You can now view this report on the Dashboard page.",
+        createdAt: new Date(),
+      };
+      setMessages(prev => [...prev, assistantResponse]);
       router.push('/dashboard');
 
     } catch (error) {
@@ -153,28 +214,33 @@ export function ChatView() {
 
 
   return (
-    <div className="flex flex-1 overflow-hidden">
-      <main className="flex-1 flex flex-col overflow-hidden">
+    <main className="flex flex-1 flex-col overflow-hidden">
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
-          <div className="container mx-auto max-w-3xl space-y-6 p-4">
+        <div className="container mx-auto max-w-3xl space-y-6 p-4">
             {messages.map(message => (
-              <ChatMessage key={message.id} message={message} />
+            <ChatMessage key={message.id} message={message} />
             ))}
             {isLoading && (
-              <ChatMessage
+            <ChatMessage
                 message={{
-                  id: 'loading',
-                  role: 'assistant',
-                  content: '',
-                  createdAt: new Date(),
+                id: 'loading',
+                role: 'assistant',
+                content: '',
+                createdAt: new Date(),
                 }}
                 isLoading
-              />
+            />
             )}
-          </div>
+        </div>
         </ScrollArea>
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
-          <div className="container mx-auto flex max-w-3xl flex-col gap-2">
+        <div className="container mx-auto flex max-w-3xl flex-col gap-2">
+            <div className="flex w-full items-start space-x-2">
+            <ChatInput
+                onSendMessage={handleSendMessage}
+                isLoading={isLoading}
+            />
+            </div>
             <Button
               variant="outline"
               onClick={handleGenerateReport}
@@ -182,17 +248,10 @@ export function ChatView() {
               className="w-full shrink-0"
             >
               <FileText className="mr-2 h-4 w-4" />
-              Extract Requirement
+              Generate Report
             </Button>
-            <div className="flex w-full items-start space-x-2">
-              <ChatInput
-                onSendMessage={handleSendMessage}
-                isLoading={isLoading}
-              />
-            </div>
-          </div>
         </div>
-      </main>
-    </div>
+        </div>
+    </main>
   );
 }
