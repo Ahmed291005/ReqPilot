@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   Bot,
   PanelRight,
-  FileText,
 } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { usePathname, useRouter } from 'next/navigation';
@@ -135,7 +134,6 @@ export function Header() {
           disabled={isLoading || requirements.length === 0}
           className="shrink-0 hidden md:flex"
         >
-          <FileText className="mr-2 h-4 w-4" />
           Extract Requirement
         </Button>
         <ThemeToggle />
