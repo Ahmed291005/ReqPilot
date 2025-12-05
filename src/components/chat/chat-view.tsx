@@ -19,26 +19,26 @@ const initialMessages: Message[] = [
   {
     id: crypto.randomUUID(),
     role: 'assistant',
-    content: 'To start, please describe your application idea.',
+    content:
+      "Hello! To start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
 
 export function ChatView() {
-  const {
-    requirements,
+  const { 
+    requirements, 
     setRequirements,
-    classifiedRequirements,
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
-  } = useAppContext();
+   } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-
+  
   useEffect(() => {
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
@@ -61,30 +61,25 @@ export function ChatView() {
     setIsLoading(true);
 
     try {
-      const conversationForAI = newMessages.map(
-        // Strip out the complex data fields before sending to the AI
-        ({
-          requirements,
-          classifiedRequirements,
-          userStories,
-          stakeholders,
-          ...rest
-        }) => rest
-      );
+        const conversationForAI = newMessages.map(
+          // Strip out the complex data fields before sending to the AI
+          ({ requirements, classifiedRequirements, userStories, stakeholders, ...rest }) => rest
+        );
+      
+        const result = await continueConversation(conversationForAI);
 
-      const result = await continueConversation(conversationForAI);
+        const updatedRequirements = result.updatedRequirements || [];
+        setRequirements(updatedRequirements);
 
-      const updatedRequirements = result.updatedRequirements || [];
-      setRequirements(updatedRequirements);
+        const assistantResponse: Message = {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: result.followUpQuestion,
+            createdAt: new Date(),
+          };
 
-      const assistantResponse: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: result.followUpQuestion,
-        createdAt: new Date(),
-      };
+        setMessages(prev => [...prev, assistantResponse]);
 
-      setMessages(prev => [...prev, assistantResponse]);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -116,9 +111,8 @@ export function ChatView() {
     }
     setIsLoading(true);
     try {
-      const { classifiedResult, userStories, stakeholders } =
-        await generateReport(requirements, classifiedRequirements);
-
+      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements);
+      
       const requirementMap = new Map(
         classifiedResult.map(cr => [cr.requirement, cr.type])
       );
@@ -129,22 +123,20 @@ export function ChatView() {
         domain: 3,
         inverse: 4,
       };
-
+      
       const updatedReqs = requirements
         .map(req => ({
           ...req,
           type: requirementMap.get(req.description) || req.type,
         }))
-        .sort(
-          (a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99)
-        );
+        .sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
 
       setRequirements(updatedReqs);
       setClassifiedRequirements(classifiedResult);
       setUserStories(userStories);
       setStakeholders(stakeholders);
-
       router.push('/dashboard');
+
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -157,6 +149,7 @@ export function ChatView() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -182,13 +175,13 @@ export function ChatView() {
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
           <div className="container mx-auto flex max-w-3xl flex-col gap-2">
             <Button
-              variant="outline"
-              onClick={handleGenerateReport}
-              disabled={isLoading || requirements.length === 0}
-              className="w-full shrink-0"
+                variant="outline"
+                onClick={handleGenerateReport}
+                disabled={isLoading || requirements.length === 0}
+                className="w-full shrink-0"
             >
-              <FileText className="mr-2 h-4 w-4" />
-              Extract Requirement
+                <FileText className="mr-2 h-4 w-4" />
+                Extract Requirement
             </Button>
             <div className="flex w-full items-start space-x-2">
               <ChatInput
