@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { useAppContext } from '@/context/app-state-provider';
 import type { Requirement } from '@/lib/types';
 
 interface DataTableProps<TData, TValue> {
@@ -37,12 +38,14 @@ export function DataTable<TData extends Requirement, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { userStories, stakeholders } = useAppContext();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -53,16 +56,19 @@ export function DataTable<TData extends Requirement, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
+      rowSelection,
     },
     pageCount: -1,
   });
 
   const exportToPDF = () => {
     const doc = new jsPDF();
+    let finalY = 0;
     const pageMargin = 14;
 
     // Report Title
@@ -78,6 +84,9 @@ export function DataTable<TData extends Requirement, TValue>({
             row.original.priority,
         ]),
         startY: 30,
+        headStyles: {
+            fillColor: [45, 52, 129] // Corresponds to hsl(238 52% 38%)
+        },
         didDrawPage: function (data: any) {
           doc.setFontSize(18);
           doc.text('Requirements', pageMargin, data.settings.margin.top);
@@ -85,6 +94,59 @@ export function DataTable<TData extends Requirement, TValue>({
         margin: { top: 30 }
     });
 
+    finalY = (doc as any).lastAutoTable.finalY || 0;
+
+    const checkAndAddPage = () => {
+        if (finalY > 250) {
+            doc.addPage();
+            finalY = 0;
+        }
+    }
+
+    // User Stories
+    if (userStories.length > 0) {
+      checkAndAddPage();
+      const userStoriesBody = userStories.flatMap(story => [
+        [`As a ${story.userPersona}, I want to ${story.feature}, so that ${story.benefit}.`],
+        ...story.acceptanceCriteria.map(ac => [{ content: `- ${ac}`, styles: { cellPadding: {left: 5}}} ]),
+        [' '] // Spacer row
+      ]);
+
+      (doc as any).autoTable({
+        startY: finalY + 15,
+        head: [['User Stories']],
+        body: userStoriesBody,
+        theme: 'plain',
+        headStyles: {
+            fillColor: [45, 52, 129]
+        },
+        didDrawPage: function (data: any) {
+            doc.setFontSize(18);
+            doc.text('User Stories', pageMargin, data.settings.margin.top);
+        },
+        margin: { top: 30 }
+      });
+      finalY = (doc as any).lastAutoTable.finalY;
+    }
+    
+    // Stakeholders
+    if (stakeholders.length > 0) {
+        checkAndAddPage();
+        const stakeholdersBody = stakeholders.map(s => [s.role, s.description]);
+        (doc as any).autoTable({
+            startY: finalY + 15,
+            head: [['Role', 'Description']],
+            body: stakeholdersBody,
+            headStyles: {
+                fillColor: [45, 52, 129]
+            },
+            didDrawPage: function (data: any) {
+              doc.setFontSize(18);
+              doc.text('Stakeholders', pageMargin, data.settings.margin.top);
+            },
+            margin: { top: 30 }
+        });
+    }
 
     doc.save('report.pdf');
   };
