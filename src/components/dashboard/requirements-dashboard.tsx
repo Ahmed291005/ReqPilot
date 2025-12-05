@@ -19,7 +19,7 @@ export function RequirementsDashboard() {
     <main className="flex-1 flex-col p-4 md:p-8 overflow-y-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Requirement Repository</CardTitle>
+          <CardTitle>Requirements</CardTitle>
           <CardDescription>
             View, manage, and export all project requirements from here.
           </CardDescription>

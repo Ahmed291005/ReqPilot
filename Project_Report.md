@@ -78,9 +78,9 @@ This diagram illustrates the high-level component architecture of the Next.js fr
 ```
 [ RootLayout (layout.tsx) ]
  |
- +-- [ AppStateProvider (app-state-provider.tsx) ] -- (Global State: requirements, userStories, etc.)
+ +-- [ AppStateProvider (app-state-provider.tsx) ] -- (Global State: requirements, etc.)
  |    |
- |    +-- [ Header (header.tsx) ] -- (Nav Links, Theme Toggle)
+ |    +-- [ Header (header.tsx) ] -- (Nav Links, Theme Toggle, Extract Requirements)
  |    |
  |    +-- [ Children (Page Content) ]
  |         |
@@ -89,8 +89,6 @@ This diagram illustrates the high-level component architecture of the Next.js fr
  |         |     +-- [ ChatMessage (chat-message.tsx) ] -- (Displays user/AI message)
  |         |     |
  |         |     +-- [ ChatInput (chat-input.tsx) ] -- (User input form)
- |         |     |
- |         |     +-- [ RequirementsDisplay (in sidebar) ] -- (Lists current requirements)
  |         |
  |         +-- (/dashboard) -- [ RequirementsDashboard (requirements-dashboard.tsx) ]
  |               |
@@ -99,16 +97,11 @@ This diagram illustrates the high-level component architecture of the Next.js fr
  |               |     +-- [ columns.tsx ] -- (Defines table structure and actions)
  |               |
  |               +-- [ EditRequirementDialog (edit-requirement-dialog.tsx) ]
- |               |
- |               +-- [ UserStoryCard / StakeholderCard ]
  |
  +-- [ Genkit Flows (src/ai/flows/*.ts) ] -- (Backend AI Logic)
       |
       +-- continueConversation
-      +-- generateReport
       +-- classifyRequirements
-      +-- generateUserStories
-      +-- identifyStakeholders
 ```
 
 ### B. Behavioural Diagram: User Interaction Flow (Sequence Diagram)
@@ -132,14 +125,12 @@ sequenceDiagram
     
     Note over User, ChatView: Conversation continues iteratively...
 
-    User->>ChatView: Clicks "Generate Report"
-    ChatView->>Genkit: Calls generateReport(requirements)
+    User->>Header: Clicks "Extract Requirement"
+    Header->>Genkit: Calls generateReport(requirements)
     Genkit->>Genkit: 1. classifyRequirements()
-    Genkit->>Genkit: 2. generateUserStories()
-    Genkit->>Genkit: 3. identifyStakeholders()
-    Genkit-->>ChatView: Returns { classifiedResult, userStories, stakeholders }
-    ChatView->>AppState: Updates state with all report data
-    ChatView->>User: Navigates to /dashboard page
+    Genkit-->>Header: Returns { classifiedResult }
+    Header->>AppState: Updates state with all report data
+    Header->>User: Navigates to /dashboard page
 ```
 
 ---
@@ -150,7 +141,7 @@ The application operates through a seamless integration of a modern frontend and
 
 1.  **Frontend Interaction:**
     *   The user interacts with a chat interface built with **React** and **Next.js**. All UI elements are standard, reusable components from the **shadcn/ui** library, styled with **Tailwind CSS**.
-    *   Global state, such as the cumulative list of requirements, user stories, and stakeholders, is managed using **React Context** (`AppStateProvider`). This ensures that data is consistently available across different pages and components.
+    *   Global state, such as the cumulative list of requirements is managed using **React Context** (`AppStateProvider`). This ensures that data is consistently available across different pages and components.
 
 2.  **Conversational AI:**
     *   When a user sends a message, the frontend calls a server action that triggers the `continueConversation` Genkit flow.
@@ -158,12 +149,9 @@ The application operates through a seamless integration of a modern frontend and
     *   The flow returns the updated requirements and the new question to the frontend, which updates the UI accordingly.
 
 3.  **Report Generation:**
-    *   When the "Generate Report" button is clicked, the `generateReport` server action is invoked.
-    *   This action orchestrates calls to several specialized Genkit flows:
-        *   `classifyRequirements`: Categorizes each requirement.
-        *   `generateUserStories`: Creates user stories from functional requirements.
-        *   `identifyStakeholders`: Identifies relevant user roles.
-    *   Each of these flows uses a specifically engineered prompt to instruct the Gemini model to return data in a structured JSON format, which is then parsed and sent back to the frontend.
+    *   When the "Extract Requirement" button is clicked, the `generateReport` server action is invoked.
+    *   This action orchestrates a call to the `classifyRequirements` Genkit flow.
+    *   This flow uses a specifically engineered prompt to instruct the Gemini model to return data in a structured JSON format, which is then parsed and sent back to the frontend.
 
 4.  **Dashboard and Export:**
     *   The data from the report generation process is stored in the global state and displayed on the `/dashboard` page.
@@ -179,8 +167,8 @@ The application operates through a seamless integration of a modern frontend and
 <img width="1363" height="399" alt="image" src="https://github.com/user-attachments/assets/7b5c8585-af90-4525-ab77-c254b85c13ee" />
 
 #### Dashboard View
-*A comprehensive dashboard displaying the generated Requirement Repository, User Stories, and Stakeholders.*
-<img width-="1363" height="570" alt="image" src="https://github.com/user-attachments/assets/31df0952-5eee-4c36-9f44-cbfbf3ec8f4f" />
+*A comprehensive dashboard displaying the generated Requirements.*
+<img width="1363" height="570" alt="image" src="https://github.com/user-attachments/assets/31df0952-5eee-4c36-9f44-cbfbf3ec8f4f" />
 
 ---
 

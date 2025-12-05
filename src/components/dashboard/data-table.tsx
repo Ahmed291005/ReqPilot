@@ -92,7 +92,7 @@ export function DataTable<TData extends Requirement, TValue>({
         startY: 30,
         didDrawPage: function (data: any) {
           doc.setFontSize(18);
-          doc.text('Requirement Repository', pageMargin, data.settings.margin.top);
+          doc.text('Requirements', pageMargin, data.settings.margin.top);
         },
         margin: { top: 30 }
     });
