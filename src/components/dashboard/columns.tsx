@@ -3,7 +3,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Requirement } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-react';
 
@@ -21,7 +20,7 @@ export const columns: ColumnDef<Requirement>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Classification
+          Type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

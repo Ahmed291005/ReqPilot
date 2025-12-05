@@ -43,7 +43,6 @@ export function DataTable<TData extends Requirement, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -54,12 +53,10 @@ export function DataTable<TData extends Requirement, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
     pageCount: -1,
   });
@@ -74,7 +71,7 @@ export function DataTable<TData extends Requirement, TValue>({
 
     // Requirements Table
     (doc as any).autoTable({
-        head: [['Requirement', 'Classification', 'Priority']],
+        head: [['Requirement', 'Type', 'Priority']],
         body: table.getRowModel().rows.map(row => [
             row.original.description,
             row.original.type,
@@ -97,7 +94,7 @@ export function DataTable<TData extends Requirement, TValue>({
       <div className="flex items-center justify-end py-4">
         <Button onClick={exportToPDF} variant="outline" className="ml-auto">
           <Download className="mr-2 h-4 w-4" />
-          Export as PDF
+          Export Requirements
         </Button>
       </div>
       <div className="rounded-md border">
