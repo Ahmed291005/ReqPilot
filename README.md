@@ -1,6 +1,7 @@
-# ReqArchitect Chat 🤖
 
-ReqArchitect Chat is an AI assistant for software requirement gathering built with Next.js and Google's Gemini models via Genkit. It helps you brainstorm, generate, and refine software requirements through an intuitive conversational interface.
+# ReqPilot Chat 🤖
+
+ReqPilot Chat is an AI assistant for software requirement gathering built with Next.js and Google's Gemini models via Genkit. It helps you brainstorm, generate, and refine software requirements through an intuitive conversational interface.
 
 ## ✨ Features
 
@@ -40,8 +41,8 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/reqarchitect.git
-   cd reqarchitect
+   git clone https://github.com/your-username/reqpilot.git
+   cd reqpilot
    ```
 
 2. **Install NPM packages:**

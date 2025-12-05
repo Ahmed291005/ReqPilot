@@ -1,10 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  continueConversation,
-  generateReport,
-} from '@/app/actions';
+import { continueConversation, generateReport } from '@/app/actions';
 import type { Message, Requirement } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -29,7 +26,7 @@ const initialMessages: Message[] = [
     id: crypto.randomUUID(),
     role: 'assistant',
     content:
-      "Hello! I'm ReqArchitect, your AI assistant for software requirement gathering. To start, please describe your application idea.",
+      "Hello! I'm ReqPilot, your AI assistant for software requirement gathering. To start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
@@ -86,23 +83,22 @@ function RequirementsDisplay({
   );
 }
 
-
 export function ChatView() {
-  const { 
-    requirements, 
+  const {
+    requirements,
     setRequirements,
     classifiedRequirements,
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
     isSidebarOpen,
-   } = useAppContext();
+  } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-  
+
   useEffect(() => {
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
@@ -125,25 +121,30 @@ export function ChatView() {
     setIsLoading(true);
 
     try {
-        const conversationForAI = newMessages.map(
-          // Strip out the complex data fields before sending to the AI
-          ({ requirements, classifiedRequirements, userStories, stakeholders, ...rest }) => rest
-        );
-      
-        const result = await continueConversation(conversationForAI);
+      const conversationForAI = newMessages.map(
+        // Strip out the complex data fields before sending to the AI
+        ({
+          requirements,
+          classifiedRequirements,
+          userStories,
+          stakeholders,
+          ...rest
+        }) => rest
+      );
 
-        const updatedRequirements = result.updatedRequirements || [];
-        setRequirements(updatedRequirements);
+      const result = await continueConversation(conversationForAI);
 
-        const assistantResponse: Message = {
-            id: crypto.randomUUID(),
-            role: 'assistant',
-            content: result.followUpQuestion,
-            createdAt: new Date(),
-          };
+      const updatedRequirements = result.updatedRequirements || [];
+      setRequirements(updatedRequirements);
 
-        setMessages(prev => [...prev, assistantResponse]);
+      const assistantResponse: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: result.followUpQuestion,
+        createdAt: new Date(),
+      };
 
+      setMessages(prev => [...prev, assistantResponse]);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -175,8 +176,9 @@ export function ChatView() {
     }
     setIsLoading(true);
     try {
-      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements, classifiedRequirements);
-      
+      const { classifiedResult, userStories, stakeholders } =
+        await generateReport(requirements, classifiedRequirements);
+
       const requirementMap = new Map(
         classifiedResult.map(cr => [cr.requirement, cr.type])
       );
@@ -187,13 +189,15 @@ export function ChatView() {
         domain: 3,
         inverse: 4,
       };
-      
+
       const updatedReqs = requirements
         .map(req => ({
           ...req,
           type: requirementMap.get(req.description) || req.type,
         }))
-        .sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
+        .sort(
+          (a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99)
+        );
 
       setRequirements(updatedReqs);
       setClassifiedRequirements(classifiedResult);
@@ -209,7 +213,6 @@ export function ChatView() {
       };
       setMessages(prev => [...prev, assistantResponse]);
       router.push('/dashboard');
-
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -222,7 +225,6 @@ export function ChatView() {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -255,7 +257,7 @@ export function ChatView() {
               variant="outline"
               onClick={handleGenerateReport}
               disabled={isLoading || requirements.length === 0}
-              className="shrink-0"
+              className="w-full shrink-0"
             >
               <FileText className="mr-2 h-4 w-4" />
               Generate Report
@@ -263,12 +265,14 @@ export function ChatView() {
           </div>
         </div>
       </main>
-      <aside className={cn(
+      <aside
+        className={cn(
           'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
           'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
-        )}>
-         <RequirementsDisplay requirements={requirements} />
+        )}
+      >
+        <RequirementsDisplay requirements={requirements} />
       </aside>
     </div>
   );

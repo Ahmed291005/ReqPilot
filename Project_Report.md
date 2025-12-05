@@ -1,11 +1,11 @@
 
-# Project Report: ReqArchitect 🤖
+# Project Report: ReqPilot 🤖
 
 ---
 
 ## 1. Title Page
 
-**Project Title:** ReqArchitect: An AI-Powered Assistant for Software Requirement Engineering
+**Project Title:** ReqPilot: An AI-Powered Assistant for Software Requirement Engineering
 
 **Author:** Ahmed
 
@@ -15,7 +15,7 @@
 
 ## 2. Abstract
 
-The traditional process of software requirement engineering is often complex, time-consuming, and prone to human error, forming a significant bottleneck in the Software Development Life Cycle (SDLC). ReqArchitect is a modern web application designed to address these challenges by leveraging the power of large language models. Built with Next.js and Google's Gemini models via the Genkit framework, this project introduces an intelligent chatbot that acts as an AI business analyst. It engages users in a natural conversation to elicit, refine, and document software requirements. The system automates the classification of requirements, generation of user stories, and identification of key stakeholders, culminating in a comprehensive, exportable project report. ReqArchitect aims to democratize the requirement-gathering process, making it faster, more collaborative, and more efficient for technical and non-technical stakeholders alike.
+The traditional process of software requirement engineering is often complex, time-consuming, and prone to human error, forming a significant bottleneck in the Software Development Life Cycle (SDLC). ReqPilot is a modern web application designed to address these challenges by leveraging the power of large language models. Built with Next.js and Google's Gemini models via the Genkit framework, this project introduces an intelligent chatbot that acts as an AI business analyst. It engages users in a natural conversation to elicit, refine, and document software requirements. The system automates the classification of requirements, generation of user stories, and identification of key stakeholders, culminating in a comprehensive, exportable project report. ReqPilot aims to democratize the requirement-gathering process, making it faster, more collaborative, and more efficient for technical and non-technical stakeholders alike.
 
 ---
 
@@ -25,7 +25,7 @@ In the domain of software engineering, the requirement elicitation and managemen
 
 The recent advancements in Generative AI present a transformative opportunity to innovate this process. AI can understand natural language, reason about complex ideas, and structure information in a specified format.
 
-**ReqArchitect** is a project that harnesses this potential. It is an interactive, AI-driven tool designed to streamline and automate key aspects of requirement engineering. By providing a conversational interface, it lowers the barrier to entry for stakeholders, allowing them to express their ideas in plain English. The AI assistant then intelligently processes this input, asks clarifying questions to resolve ambiguity, and structures the information into a formal set of requirements. This not only accelerates the initial brainstorming phase but also enhances the quality and completeness of the final documentation, leading to more efficient and successful software development projects.
+**ReqPilot** is a project that harnesses this potential. It is an interactive, AI-driven tool designed to streamline and automate key aspects of requirement engineering. By providing a conversational interface, it lowers the barrier to entry for stakeholders, allowing them to express their ideas in plain English. The AI assistant then intelligently processes this input, asks clarifying questions to resolve ambiguity, and structures the information into a formal set of requirements. This not only accelerates the initial brainstorming phase but also enhances the quality and completeness of the final documentation, leading to more efficient and successful software development projects.
 
 ---
 
@@ -41,14 +41,14 @@ Key pain points include:
 4.  **Poor Stakeholder Engagement:** Non-technical stakeholders may find the formal requirement process intimidating or inaccessible, leading to incomplete input and a final product that doesn't fully meet their needs.
 5.  **Static Documentation:** Traditional requirement documents are often static and difficult to update, making iterative refinement a cumbersome task.
 
-**ReqArchitect** aims to solve these problems by providing an automated, accessible, and intelligent platform that assists in the elicitation, analysis, and documentation of software requirements, thereby reducing manual effort and improving the clarity and completeness of the project's foundation.
+**ReqPilot** aims to solve these problems by providing an automated, accessible, and intelligent platform that assists in the elicitation, analysis, and documentation of software requirements, thereby reducing manual effort and improving the clarity and completeness of the project's foundation.
 
 ---
 
 ## 5. Hardware and Software Requirements
 
 ### Hardware Requirements
-As a web-based application, ReqArchitect does not impose any specific hardware requirements on the end-user beyond what is needed to run a modern web browser.
+As a web-based application, ReqPilot does not impose any specific hardware requirements on the end-user beyond what is needed to run a modern web browser.
 *   **Device:** A computer, tablet, or smartphone.
 *   **Processor:** 1 GHz or faster.
 *   **RAM:** 2 GB or more.
@@ -195,3 +195,4 @@ This project was built using industry-standard tools and libraries. Official doc
 *   **Tailwind CSS:** [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
 *   **TanStack Table:** [https://tanstack.com/table/v8](https://tanstack.com/table/v8)
 *   **jsPDF:** [http://raw.githack.com/MrRio/jsPDF/master/docs/](http://raw.githack.com/MrRio/jsPDF/master/docs/)
+

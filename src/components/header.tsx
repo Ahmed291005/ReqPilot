@@ -23,7 +23,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <ClipboardList className="h-6 w-6 text-primary" />
           <h1 className="text-lg font-semibold tracking-tight font-headline">
-            ReqArchitect
+            ReqPilot
           </h1>
         </Link>
         <nav className="hidden md:flex items-center gap-2">
