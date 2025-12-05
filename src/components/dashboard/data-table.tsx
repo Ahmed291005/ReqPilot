@@ -133,7 +133,7 @@ export function DataTable<TData extends Requirement, TValue>({
         <div className="flex-1"></div>
         <Button onClick={exportToPDF} variant="outline" className="ml-auto">
           <Download className="mr-2 h-4 w-4" />
-          export requirement
+          Export Requirement
         </Button>
       </div>
       <div className="rounded-md border">
