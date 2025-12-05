@@ -3,14 +3,11 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   continueConversation,
-  generateReport,
 } from '@/app/actions';
 import type { Message, Requirement } from '@/lib/types';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatInput } from './chat-input';
 import { ChatMessage } from './chat-message';
-import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Card,
@@ -29,25 +26,73 @@ const initialMessages: Message[] = [
     id: crypto.randomUUID(),
     role: 'assistant',
     content:
-      "Hello! I'm ReqPilot. To get started, please tell me about your app idea.",
+      "Hello! I'm ReqArchitect. To start, please describe your application idea.",
     createdAt: new Date(),
   },
 ];
+
+function RequirementsDisplay({
+  requirements,
+}: {
+  requirements: Requirement[];
+}) {
+  if (requirements.length === 0) return null;
+
+  const priorityVariant = {
+    high: 'destructive',
+    medium: 'default',
+    low: 'secondary',
+  } as const;
+
+  return (
+    <>
+      <Card className="mt-4 w-full">
+        <CardHeader>
+          <CardTitle>Current Requirements</CardTitle>
+          <CardDescription>
+            Here is the list of requirements we've built so far.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2">
+            {requirements.map(req => (
+              <li
+                key={req.id}
+                className="flex items-start justify-between rounded-lg border p-3"
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{req.description}</p>
+                  <p className="text-xs text-muted-foreground">{req.type}</p>
+                </div>
+                <Badge
+                  variant={
+                    priorityVariant[
+                      req.priority as keyof typeof priorityVariant
+                    ]
+                  }
+                  className="ml-4"
+                >
+                  {req.priority}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
 
 export function ChatView() {
   const { 
     requirements, 
     setRequirements,
-    classifiedRequirements,
-    setClassifiedRequirements,
-    setUserStories,
-    setStakeholders,
     isSidebarOpen,
    } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const { toast } = useToast();
   
   useEffect(() => {
@@ -143,6 +188,13 @@ export function ChatView() {
           </div>
         </div>
       </main>
+      <aside className={cn(
+          'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
+          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
+        )}>
+         <RequirementsDisplay requirements={requirements} />
+      </aside>
     </div>
   );
 }
