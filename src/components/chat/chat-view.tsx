@@ -33,45 +33,6 @@ const initialMessages: Message[] = [
   },
 ];
 
-function RequirementsDisplay({
-  requirements,
-}: {
-  requirements: Requirement[];
-}) {
-  if (requirements.length === 0) return null;
-
-  return (
-    <>
-      <Card className="mt-4 w-full">
-        <CardHeader>
-          <CardTitle>Current Requirements</CardTitle>
-          <CardDescription>
-            Here is the list of requirements we've built so far.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {requirements.map(req => (
-              <li
-                key={req.id}
-                className="flex items-start justify-between rounded-lg border p-3"
-              >
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{req.description}</p>
-                  <p className="text-xs text-muted-foreground">{req.type}</p>
-                </div>
-                <div className="ml-4 capitalize">
-                  {req.priority}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    </>
-  );
-}
-
 
 export function ChatView() {
   const { 
@@ -81,7 +42,6 @@ export function ChatView() {
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
-    isSidebarOpen,
    } = useAppContext();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -211,7 +171,6 @@ export function ChatView() {
 
 
   return (
-    <div className="flex flex-1 overflow-hidden">
       <main className="flex-1 flex flex-col overflow-hidden">
         <ScrollArea className="flex-1" viewportRef={viewportRef}>
           <div className="container mx-auto max-w-3xl space-y-6 p-4">
@@ -251,12 +210,5 @@ export function ChatView() {
           </div>
         </div>
       </main>
-      <aside className={cn(
-          'w-full md:w-1/3 border-l overflow-y-auto p-4 transition-transform transform md:translate-x-0',
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
-          'absolute md:relative right-0 top-0 h-full bg-background z-10 md:z-0'
-        )}>
-      </aside>
-    </div>
   );
 }
