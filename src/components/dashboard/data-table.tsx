@@ -34,7 +34,7 @@ import { Download, ChevronDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { useAppContext } from '@/context/app-state-provider';
-import type { Requirement } from '@/lib/types';
+import type { UserStory, Stakeholder, Requirement } from '@/lib/types';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,6 +45,7 @@ export function DataTable<TData extends Requirement, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { userStories, stakeholders } = useAppContext();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -115,7 +116,7 @@ export function DataTable<TData extends Requirement, TValue>({
         />
         <Button onClick={exportToPDF} variant="outline" className="ml-auto">
           <Download className="mr-2 h-4 w-4" />
-          Export Report as PDF
+          Export as PDF
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

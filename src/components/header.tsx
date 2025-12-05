@@ -73,9 +73,9 @@ export function Header() {
       setStakeholders(stakeholders);
       
       toast({
-        title: 'Report Generated',
+        title: 'Requirements Extracted',
         description:
-          "Navigating to the dashboard to view the full report.",
+          "Navigating to the dashboard to view the extracted requirements.",
       });
 
       router.push('/dashboard');
@@ -84,7 +84,7 @@ export function Header() {
         error instanceof Error ? error.message : 'An unknown error occurred.';
       toast({
         variant: 'destructive',
-        title: 'Failed to Generate Report',
+        title: 'Failed to Extract Requirements',
         description: errorMessage,
       });
     } finally {
@@ -136,7 +136,7 @@ export function Header() {
           className="shrink-0 hidden md:flex"
         >
           <FileText className="mr-2 h-4 w-4" />
-          Generate Report
+          Extract Requirement
         </Button>
         <ThemeToggle />
         {pathname === '/' && (
