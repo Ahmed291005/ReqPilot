@@ -10,4 +10,17 @@
   stroke-linejoin="round"
 >
   <circle cx="12" cy="12" r="10" />
+  <text
+    x="12"
+    y="12"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Arial, sans-serif"
+    font-size="9"
+    font-weight="bold"
+    fill="white"
+    stroke="none"
+  >
+    RP
+  </text>
 </svg>
