@@ -20,7 +20,7 @@ const initialMessages: Message[] = [
     id: crypto.randomUUID(),
     role: 'assistant',
     content:
-      "Hello! To start, please describe your application idea.",
+      "Hello! I'm ReqArchitect. Tell me about your app idea to get started.",
     createdAt: new Date(),
   },
 ];
@@ -29,6 +29,7 @@ export function ChatView() {
   const { 
     requirements, 
     setRequirements,
+    classifiedRequirements,
     setClassifiedRequirements,
     setUserStories,
     setStakeholders,
@@ -111,7 +112,7 @@ export function ChatView() {
     }
     setIsLoading(true);
     try {
-      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements);
+      const { classifiedResult, userStories, stakeholders } = await generateReport(requirements, classifiedRequirements);
       
       const requirementMap = new Map(
         classifiedResult.map(cr => [cr.requirement, cr.type])
@@ -175,13 +176,13 @@ export function ChatView() {
         <div className="border-t bg-background/95 p-4 backdrop-blur-sm">
           <div className="container mx-auto flex max-w-3xl flex-col gap-2">
             <Button
-                variant="outline"
-                onClick={handleGenerateReport}
-                disabled={isLoading || requirements.length === 0}
-                className="w-full shrink-0"
+              variant="outline"
+              onClick={handleGenerateReport}
+              disabled={isLoading || requirements.length === 0}
+              className="w-full shrink-0"
             >
-                <FileText className="mr-2 h-4 w-4" />
-                Extract Requirement
+              <FileText className="mr-2 h-4 w-4" />
+              Extract Requirement
             </Button>
             <div className="flex w-full items-start space-x-2">
               <ChatInput
