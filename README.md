@@ -14,7 +14,7 @@ ReqPilot Chat is an AI assistant for software requirement gathering built with N
 ## ✨ Interface
 
 <img width="1366" height="639" alt="image" src="https://github.com/user-attachments/assets/1ba856bc-2979-47e7-95f8-282c9255f031" />
-<img width="1366" height="574" alt="image" src="https://github.com/user-attachments/assets/8dde95cc-18f9-4f81-9324-44a18585f001" />
+<img width="1366" height="566" alt="image" src="https://github.com/user-attachments/assets/47a59a22-91ad-47a9-80f1-d3335aea4db0" />
 
 ## 🛠️ Tech Stack
 
