@@ -1,16 +1,13 @@
-
 # ReqPilot Chat 🤖
 
-ReqPilot Chat is an AI assistant for software requirement gathering built with Next.js and Google's Gemini models via Genkit. It helps you brainstorm, generate, and refine software requirements through an intuitive conversational interface.
+ReqPilot Chat is an AI assistant for software requirement gathering built with Next.js and Google's Gemini models via Genkit. It helps you brainstorm and refine software requirements through an intuitive conversational interface.
 
 ## ✨ Features
 
-- **📝 Conversational Requirement Generation**: Describe your app idea in plain English and get a structured list of requirements. The AI maintains a cumulative list throughout the conversation.
+- **📝 Conversational Requirement Generation**: Describe your app idea in plain English. The AI assistant will ask clarifying questions to elicit and build a cumulative list of requirements.
 - **🔄 Iterative Refinement**: Continue the conversation to add, remove, or modify requirements based on your feedback.
-- **📊 Requirement Classification**: Automatically classify requirements into `functional`, `non-functional`, `domain`, and `inverse` categories.
-- **👤 User Story Generation**: Create well-formatted user stories from functional requirements, complete with user personas, features, benefits, and acceptance criteria.
-- **🤝 Stakeholder Identification**: Identify potential stakeholders and user roles based on the project requirements to get a better understanding of your target audience.
-- **📄 Automated Reporting**: Generate a comprehensive report containing classified requirements, user stories, and stakeholders, which can be viewed on the dashboard and exported as a PDF.
+- **📊 Requirement Classification**: Automatically classify the gathered requirements into `functional`, `non-functional`, `domain`, and `inverse` categories.
+- **📄 Dashboard & Export**: View all classified requirements in a clean dashboard and export the list as a PDF document.
 - **📱 Fully Responsive**: A clean and intuitive layout that works on both desktop and mobile devices.
 - **🎨 Light/Dark Mode**: Toggle between light and dark themes for your comfort.
 
@@ -39,13 +36,21 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Set up your API Key:**
+   - Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+   - Create a file named `.env` in the root of the project.
+   - Add your API key to the `.env` file like this:
+     ```
+     GEMINI_API_KEY="YOUR_API_KEY_HERE"
+     ```
+
+2. **Clone the repository:**
    ```bash
    git clone https://github.com/your-username/reqpilot.git
    cd reqpilot
    ```
 
-2. **Install NPM packages:**
+3. **Install NPM packages:**
    ```bash
    npm install
    ```
